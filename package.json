@@ -1,0 +1,16 @@
+{
+  "name": "multi-tenant-ecommerce-saas-week1",
+  "version": "1.0.0",
+  "description": "Multi-Tenant E-Commerce SaaS Cloud Platform with Razorpay Payment Gateway",
+  "scripts": {
+    "start": "node run-all.js",
+    "dev": "node run-all.js",
+    "server": "cd backend && node server.js",
+    "client": "cd frontend && npm.cmd run dev",
+    "test": "cd backend && node test-razorpay-integration.js",
+    "test:all": "powershell -Command \"node backend/test-razorpay-integration.js; node backend/test-registration-validation.js; node backend/test-auth-workflows.js; node backend/test-week3.js\""
+  },
+  "keywords": ["multi-tenant", "ecommerce", "saas", "express", "mongodb", "react"],
+  "author": "",
+  "license": "ISC"
+}
