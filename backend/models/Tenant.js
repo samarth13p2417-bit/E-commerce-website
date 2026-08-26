@@ -48,7 +48,7 @@ const tenantSchema = new mongoose.Schema(
     },
     plan: {
       type: String,
-      enum: ['starter', 'growth', 'enterprise'],
+      enum: ['starter', 'growth', 'pro', 'enterprise'],
       default: 'growth'
     },
     currency: {

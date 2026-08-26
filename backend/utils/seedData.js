@@ -755,37 +755,37 @@ const seedData = async () => {
 
     await Product.insertMany(electronicProducts);
 
-    // =========================================================================
-    // GLOBAL PLATFORM COUPONS
-    // =========================================================================
-    await Coupon.create({
-      code: 'WELCOME10',
-      discountType: 'percentage',
-      discountValue: 10,
-      minPurchase: 500,
-      maxDiscount: 2000,
-      isActive: true,
-      expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    });
+    // Coupons for stores
+    const allStores = [gymStore, sportsShop, fruitShop, poonamDresses, electronicShop];
+    for (const store of allStores) {
+      await Coupon.create({
+        tenantId: store._id,
+        code: 'WELCOME10',
+        discountType: 'percentage',
+        discountValue: 10,
+        minOrderAmount: 500,
+        maxDiscount: 2000,
+        isActive: true
+      });
+      await Coupon.create({
+        tenantId: store._id,
+        code: 'FLAT500',
+        discountType: 'fixed',
+        discountValue: 500,
+        minOrderAmount: 2500,
+        maxDiscount: 500,
+        isActive: true
+      });
+    }
 
     await Coupon.create({
+      tenantId: poonamDresses._id,
       code: 'POONAM20',
       discountType: 'percentage',
       discountValue: 20,
-      minPurchase: 2000,
+      minOrderAmount: 2000,
       maxDiscount: 5000,
-      isActive: true,
-      expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    });
-
-    await Coupon.create({
-      code: 'FLAT500',
-      discountType: 'fixed',
-      discountValue: 500,
-      minPurchase: 2500,
-      maxDiscount: 500,
-      isActive: true,
-      expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      isActive: true
     });
 
     console.log('✅ All 5 requested stores successfully populated with rich catalogs and images!');
