@@ -18,8 +18,10 @@ import {
   Phone,
   Mail,
   User,
-  X
+  X,
+  Download
 } from 'lucide-react';
+import { downloadTransactionReceipt } from '../utils/receiptGenerator';
 
 const AdminOrdersTab = () => {
   const { currentTenant } = useTenant();
@@ -327,12 +329,34 @@ const AdminOrdersTab = () => {
                   Placed on {new Date(selectedOrder.createdAt).toLocaleString('en-IN')}
                 </div>
               </div>
-              <button
-                onClick={() => setSelectedOrder(null)}
-                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-              >
-                <X size={20} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={() => downloadTransactionReceipt(selectedOrder, currentTenant)}
+                  className="btn btn-sm"
+                  style={{
+                    background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                    color: '#fff',
+                    padding: '0.4rem 0.85rem',
+                    fontSize: '0.75rem',
+                    fontWeight: '600',
+                    borderRadius: 'var(--radius-sm)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Download size={13} /> Receipt (PDF)
+                </button>
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             <div style={{ padding: '1.5rem 1.75rem', maxHeight: '75vh', overflowY: 'auto' }}>

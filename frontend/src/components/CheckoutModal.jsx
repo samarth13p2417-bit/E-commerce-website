@@ -24,8 +24,12 @@ import {
   Check,
   Sparkles,
   Wallet,
-  ExternalLink
+  ExternalLink,
+  Download,
+  Printer,
+  FileText
 } from 'lucide-react';
+import { downloadTransactionReceipt } from '../utils/receiptGenerator';
 
 const CheckoutModal = () => {
   const { currentTenant } = useTenant();
@@ -630,7 +634,10 @@ const CheckoutModal = () => {
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
         style={{
-          maxWidth: completedOrder ? '540px' : '880px',
+          maxWidth: completedOrder ? '520px' : '880px',
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
           padding: 0,
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden'
@@ -638,66 +645,66 @@ const CheckoutModal = () => {
       >
         {/* If order placed successfully */}
         {completedOrder ? (
-          <div style={{ padding: '2.5rem 2rem', textAlign: 'center' }}>
+          <div style={{ padding: '1.75rem 1.75rem', textAlign: 'center', overflowY: 'auto', maxHeight: '90vh' }}>
             <div
               style={{
-                width: '72px',
-                height: '72px',
+                width: '56px',
+                height: '56px',
                 borderRadius: '50%',
                 background: 'rgba(16, 185, 129, 0.15)',
                 color: '#10b981',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 1.5rem',
-                boxShadow: '0 0 30px rgba(16, 185, 129, 0.3)'
+                margin: '0 auto 1rem',
+                boxShadow: '0 0 25px rgba(16, 185, 129, 0.3)'
               }}
             >
-              <CheckCircle2 size={40} />
+              <CheckCircle2 size={32} />
             </div>
 
-            <span className="badge badge-tenant" style={{ marginBottom: '0.75rem' }}>
+            <span className="badge badge-tenant" style={{ marginBottom: '0.5rem' }}>
               {currentTenant?.name}
             </span>
 
-            <h2 style={{ fontSize: '1.7rem', color: '#fff', marginBottom: '0.4rem', fontWeight: '800' }}>
+            <h2 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '0.25rem', fontWeight: '800' }}>
               Payment Done! 🎉
             </h2>
-            <p style={{ color: '#86efac', fontSize: '0.92rem', marginBottom: '1.5rem', fontWeight: '600' }}>
+            <p style={{ color: '#86efac', fontSize: '0.85rem', marginBottom: '1.1rem', fontWeight: '600' }}>
               ✓ Razorpay Confirmed: Payment Received & Verified Successfully!
             </p>
 
             <div
               className="glass-panel"
               style={{
-                padding: '1.25rem',
+                padding: '1rem 1.15rem',
                 borderRadius: 'var(--radius-md)',
                 textAlign: 'left',
-                marginBottom: '1.5rem',
+                marginBottom: '1rem',
                 background: 'rgba(255, 255, 255, 0.02)'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.82rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Order Number</span>
                 <strong style={{ color: 'var(--tenant-primary)' }}>{completedOrder.orderNumber}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.82rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Payment Gateway</span>
                 <span style={{ color: '#38bdf8', fontWeight: '600', textTransform: 'uppercase' }}>
                   {completedOrder.payment?.method === 'razorpay' ? 'Razorpay Secure' : completedOrder.payment?.method}
                 </span>
               </div>
               {completedOrder.payment?.transactionId && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.82rem' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Transaction / Payment ID</span>
-                  <span style={{ color: '#fff', fontSize: '0.775rem', fontFamily: 'monospace' }}>
+                  <span style={{ color: '#fff', fontSize: '0.75rem', fontFamily: 'monospace' }}>
                     {completedOrder.payment?.transactionId}
                   </span>
                 </div>
               )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.82rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Delivery Address</span>
-                <span style={{ color: '#fff', textAlign: 'right', maxWidth: '240px' }}>
+                <span style={{ color: '#fff', textAlign: 'right', maxWidth: '240px', fontSize: '0.8rem' }}>
                   {completedOrder.customer?.shippingAddress?.street}, {completedOrder.customer?.shippingAddress?.city}
                 </span>
               </div>
@@ -705,10 +712,10 @@ const CheckoutModal = () => {
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  paddingTop: '0.6rem',
+                  paddingTop: '0.5rem',
                   borderTop: '1px solid rgba(255,255,255,0.08)',
                   fontWeight: '700',
-                  fontSize: '0.95rem'
+                  fontSize: '0.92rem'
                 }}
               >
                 <span style={{ color: '#fff' }}>Total Paid</span>
@@ -721,24 +728,53 @@ const CheckoutModal = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.45rem',
-                fontSize: '0.775rem',
+                gap: '0.4rem',
+                fontSize: '0.75rem',
                 color: '#86efac',
                 background: 'rgba(16, 185, 129, 0.1)',
                 border: '1px solid rgba(16, 185, 129, 0.25)',
-                padding: '0.6rem 0.85rem',
+                padding: '0.5rem 0.75rem',
                 borderRadius: 'var(--radius-sm)',
-                marginBottom: '1.5rem'
+                marginBottom: '1rem'
               }}
             >
               <span>📧 Transaction confirmation & tax invoice sent to <strong>{completedOrder.customer?.email}</strong></span>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-              <button onClick={handleClose} className="btn btn-secondary">
+            {/* Download Receipt Button */}
+            <div style={{ marginBottom: '1rem' }}>
+              <button
+                type="button"
+                onClick={() => downloadTransactionReceipt(completedOrder, currentTenant)}
+                className="btn"
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                  color: '#fff',
+                  padding: '0.75rem 1.15rem',
+                  fontSize: '0.9rem',
+                  fontWeight: '700',
+                  borderRadius: 'var(--radius-md)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 15px rgba(2, 132, 199, 0.35)',
+                  cursor: 'pointer',
+                  border: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Download size={17} />
+                Download Transaction Receipt (PDF)
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+              <button onClick={handleClose} className="btn btn-secondary btn-sm" style={{ justifyContent: 'center', padding: '0.55rem' }}>
                 Continue Shopping
               </button>
-              <button onClick={handleViewOrders} className="btn btn-primary">
+              <button onClick={handleViewOrders} className="btn btn-primary btn-sm" style={{ justifyContent: 'center', padding: '0.55rem' }}>
                 View My Orders
               </button>
             </div>

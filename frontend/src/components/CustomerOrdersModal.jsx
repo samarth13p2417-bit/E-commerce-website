@@ -14,8 +14,10 @@ import {
   Search,
   ChevronRight,
   MapPin,
-  Calendar
+  Calendar,
+  Download
 } from 'lucide-react';
+import { downloadTransactionReceipt } from '../utils/receiptGenerator';
 
 const CustomerOrdersModal = () => {
   const { currentTenant } = useTenant();
@@ -136,13 +138,34 @@ const CustomerOrdersModal = () => {
         {/* Selected Order Detail View */}
         {selectedOrder ? (
           <div style={{ padding: '1.5rem 1.75rem', overflowY: 'auto' }}>
-            <button
-              onClick={() => setSelectedOrder(null)}
-              className="btn btn-secondary btn-sm"
-              style={{ marginBottom: '1.25rem', padding: '0.35rem 0.75rem' }}
-            >
-              ← Back to All Orders
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="btn btn-secondary btn-sm"
+                style={{ padding: '0.35rem 0.75rem' }}
+              >
+                ← Back to All Orders
+              </button>
+              <button
+                onClick={() => downloadTransactionReceipt(selectedOrder, currentTenant)}
+                className="btn btn-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                  color: '#fff',
+                  padding: '0.4rem 0.85rem',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  borderRadius: 'var(--radius-sm)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <Download size={14} /> Download Receipt
+              </button>
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <div>
